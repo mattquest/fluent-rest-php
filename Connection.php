@@ -8,7 +8,6 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class BaseConnection
- * @package App\Connections
  * @property String $resource;
  * @method bool hasBearerAuth;
  * @method \GuzzleHttp\HandlerStack stickyHeaderStack;
@@ -56,13 +55,10 @@ abstract class Connection extends Client
             ! in_array($property, $this->resourceNames())) {
             throw new ErrorException("$property resource not found, did you mean one of these? " . implode(', ', $this->resourceNames()));
         }
-        logger('setting resource to '.$property);
         $this->resource = $property;
         if ($resourceObject = $this->resourceObject($property)) {
-            logger('resource object found');
             return $resourceObject;
         } else {
-            logger('returning this');
             return $this;
         }
     }
@@ -125,7 +121,6 @@ abstract class Connection extends Client
     }
     public function post($data)
     {
-        logger("endpoint is {$this->endpointForPost()}");
         return $this->processResponse(
             parent::post(
                 $this->endpointForPost(),
@@ -204,9 +199,7 @@ abstract class Connection extends Client
     protected function randomSleep()
     {
         $microSeconds = rand(500000, 2000000);
-        logger("randomly sleeping $microSeconds micro seconds");
         usleep($microSeconds);
-        logger('done sleeping');
     }
     
     protected function rateLimit(ResponseInterface $response)
